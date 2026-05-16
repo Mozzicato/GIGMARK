@@ -50,6 +50,8 @@ export type User = {
   virtual_account_number?: string | null;
   virtual_account_bank?: string | null;
   virtual_account_name?: string | null;
+  verification_kind?: "NIN" | "BVN" | null;
+  verification_last4?: string | null;
   created_at: number;
 };
 

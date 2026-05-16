@@ -27,6 +27,7 @@ type FlowStep =
   | "ask_work"
   | "ask_goal"
   | "ask_payout"
+  | "ask_verification"
   | "review"
   | "creating"
   | "done";
@@ -38,6 +39,7 @@ const STEP_ORDER: FlowStep[] = [
   "ask_work",
   "ask_goal",
   "ask_payout",
+  "ask_verification",
   "review",
 ];
 
@@ -48,15 +50,17 @@ const STEP_PROGRESS: Record<FlowStep, number> = {
   ask_work: 4,
   ask_goal: 5,
   ask_payout: 6,
-  review: 7,
-  creating: 7,
-  done: 7,
+  ask_verification: 7,
+  review: 8,
+  creating: 8,
+  done: 8,
 };
 
 const QUICK_CHIPS: Partial<Record<FlowStep, string[]>> = {
   ask_work: ["Tailoring", "Delivery", "Graphic design", "Plumbing", "Tutoring", "Repairs"],
   ask_goal: ["Save more", "Borrow for tools", "Build credit", "Smooth cash flow"],
   ask_payout: ["Bank transfer", "Wallet", "Virtual account"],
+  ask_verification: ["Skip for now", "I have a NIN", "I have a BVN"],
   review: ["Yes, create my account", "Let me edit"],
 };
 
@@ -78,6 +82,7 @@ const PROMPTS_BY_LANG: Record<Lang, Record<FlowStep, string>> = {
     ask_work: "Lovely. What kind of work do you do most often?",
     ask_goal: "Got it. What's the main thing you want Gigmark to help you with?",
     ask_payout: "Almost done. How do you prefer to receive money after each gig?",
+    ask_verification: "One last thing — got a NIN or BVN handy? It's optional, but it unlocks credit and savings products faster. Type the number or 'skip' to do it later.",
     review: "Quick summary before I create your account...",
     creating: "Creating your Gigmark account...",
     done: "All done.",
@@ -89,6 +94,7 @@ const PROMPTS_BY_LANG: Record<Lang, Record<FlowStep, string>> = {
     ask_work: "Cool. Wetin be di kind work wey you dey do pass?",
     ask_goal: "Okay. Wetin you want make Gigmark help you with first?",
     ask_payout: "We don almost finish. How you prefer make dem pay you after each gig?",
+    ask_verification: "One last thing — you get NIN or BVN? E no compulsory, but e go open credit and savings products for you faster. Type di number, or 'skip' make I leave am.",
     review: "Make I show you small summary before I open your account...",
     creating: "I dey open your Gigmark account now...",
     done: "We don finish.",
@@ -100,6 +106,7 @@ const PROMPTS_BY_LANG: Record<Lang, Record<FlowStep, string>> = {
     ask_work: "Òdára. Iru iṣẹ́ wo lo máa ń ṣe jùlọ?",
     ask_goal: "Ó dára. Kí ni o fẹ́ kí Gigmark kọ́kọ́ ràn ọ́ lọ́wọ́?",
     ask_payout: "Ó kù díẹ̀. Báwo lo ṣe fẹ́ gba owó lẹ́yìn iṣẹ́ kọ̀ọ̀kan?",
+    ask_verification: "Ohun kan ṣì kù — ṣé o ní NIN tàbí BVN? Kò pọn dandan, ṣùgbọ́n yóò mú kí ó rọrùn láti gba krẹ́dìtì àti owó-ìfípamọ́. Tẹ nọ́mbà náà, tàbí kọ 'skip' láti rẹ́yìn rẹ̀ síbẹ̀.",
     review: "Àkópọ̀ kéré kan kí n tó ṣẹ̀dá àkáǹtì rẹ...",
     creating: "Mo ń ṣẹ̀dá àkáǹtì Gigmark rẹ báyìí...",
     done: "Ó ti parí.",
@@ -111,6 +118,7 @@ const PROMPTS_BY_LANG: Record<Lang, Record<FlowStep, string>> = {
     ask_work: "Da kyau. Wace irin aiki kake yi sosai?",
     ask_goal: "Madalla. Mene ne ka fi son Gigmark ya taimaka maka da shi tukuna?",
     ask_payout: "Mun kusan gama. Yaya kake son a biya ka bayan kowane aiki?",
+    ask_verification: "Abu ɗaya ya rage — kana da NIN ko BVN? Ba dole ba ne, amma zai buɗe maka samun bashi da tanadi cikin sauri. Rubuta lambar, ko 'skip' don in bar shi yanzu.",
     review: "Takaitaccen bayani kafin in buɗe maka asusu...",
     creating: "Ina buɗe maka asusun Gigmark yanzu...",
     done: "Mun gama.",
@@ -122,6 +130,7 @@ const PROMPTS_BY_LANG: Record<Lang, Record<FlowStep, string>> = {
     ask_work: "Ọmara. Kedụ ụdị ọrụ ị na-arụkarị?",
     ask_goal: "Ọ dị mma. Gịnị ka ị chọrọ ka Gigmark buru ụzọ nyere gị aka na ya?",
     ask_payout: "Anyị fọrọ nke nta ka anyị mechaa. Kedụ ka ị chọrọ ka a kwụọ gị ego mgbe ọrụ ọ bụla gasịrị?",
+    ask_verification: "Otu ihe fọdụrụ — ị nwere NIN ma ọ bụ BVN? Ọ bụghị mmanye, mana ọ ga-emeghe gị ohere mgbazinye ego na nchekwa ngwa ngwa. Dee nọmba ahụ, ma ọ bụ dee 'skip' ka m hapụ ya ugbu a.",
     review: "Obere nchịkọta tupu m mepee akaụntụ gị...",
     creating: "Ana m emepe akaụntụ Gigmark gị ugbu a...",
     done: "Anyị emechaala.",
@@ -134,7 +143,8 @@ const ACK_BY_LANG: Record<Lang, {
   location: (location: string) => string;
   work: (workType: string, extra: number) => string;
   payout: (text: string) => string;
-  summaryLabels: { intro: string; name: string; phone: string; location: string; work: string; goal: string; payout: string; outro: string };
+  verification: (status: "captured" | "skipped") => string;
+  summaryLabels: { intro: string; name: string; phone: string; location: string; work: string; goal: string; payout: string; verification: string; verificationPending: string; outro: string };
   confirmButton: string;
   voiceLocale: string;
 }> = {
@@ -144,7 +154,8 @@ const ACK_BY_LANG: Record<Lang, {
     location: (l) => `${l} — great, plenty of work in that area.`,
     work: (w, e) => `Noted — I've got ${w}${e > 0 ? ` and ${e} related skill${e === 1 ? "" : "s"}` : ""}.`,
     payout: (t) => `Got it — ${t}.`,
-    summaryLabels: { intro: "Here's what I have:", name: "Name", phone: "Phone", location: "Location", work: "Work", goal: "Goal", payout: "Payout", outro: "Ready for me to create your account?" },
+    verification: (s) => s === "captured" ? "Saved. Your KYC tier will step up automatically once we verify with NIMC/NIBSS." : "No problem — we'll prompt again before the first lending product.",
+    summaryLabels: { intro: "Here's what I have:", name: "Name", phone: "Phone", location: "Location", work: "Work", goal: "Goal", payout: "Payout", verification: "Verification", verificationPending: "Pending (skipped for now)", outro: "Ready for me to create your account?" },
     confirmButton: "Yes, create my Gigmark account",
     voiceLocale: "en-NG",
   },
@@ -154,7 +165,8 @@ const ACK_BY_LANG: Record<Lang, {
     location: (l) => `${l} — plenty work dey for that area.`,
     work: (w, e) => `Noted — I don get ${w}${e > 0 ? ` plus ${e} related skill${e === 1 ? "" : "s"}` : ""}.`,
     payout: (t) => `Okay — ${t}.`,
-    summaryLabels: { intro: "Wetin I get be this:", name: "Name", phone: "Phone", location: "Location", work: "Work", goal: "Goal", payout: "Payout", outro: "You ready make I open your account?" },
+    verification: (s) => s === "captured" ? "I don save am. Your KYC level go raise once we verify with NIMC/NIBSS." : "No wahala — we go ask you again before di first credit product.",
+    summaryLabels: { intro: "Wetin I get be this:", name: "Name", phone: "Phone", location: "Location", work: "Work", goal: "Goal", payout: "Payout", verification: "Verification", verificationPending: "Never give am yet", outro: "You ready make I open your account?" },
     confirmButton: "Yes, open my Gigmark account",
     voiceLocale: "en-NG",
   },
@@ -164,7 +176,8 @@ const ACK_BY_LANG: Record<Lang, {
     location: (l) => `${l} — iṣẹ́ pọ̀ ní àgbègbè yẹn.`,
     work: (w, e) => `Mo ti gbà — ${w}${e > 0 ? ` àti òye àfikún ${e}` : ""}.`,
     payout: (t) => `Ó dára — ${t}.`,
-    summaryLabels: { intro: "Èyí ni mo ní:", name: "Orúkọ", phone: "Fóònù", location: "Ìlú", work: "Iṣẹ́", goal: "Èròngbà", payout: "Owó", outro: "Ṣé n lè ṣẹ̀dá àkáǹtì rẹ báyìí?" },
+    verification: (s) => s === "captured" ? "Mo ti tọ́jú rẹ̀. KYC rẹ yóò sí gòkè lọ́gán tí a bá ti fọwọ́ sí NIMC/NIBSS." : "Kò sí ìṣòro — yóò bèèrè rẹ̀ sí ṣáájú ọjà krẹ́dìtì àkọ́kọ́.",
+    summaryLabels: { intro: "Èyí ni mo ní:", name: "Orúkọ", phone: "Fóònù", location: "Ìlú", work: "Iṣẹ́", goal: "Èròngbà", payout: "Owó", verification: "Ìfọwọ́sí", verificationPending: "A kò tíì pèsè rẹ̀", outro: "Ṣé n lè ṣẹ̀dá àkáǹtì rẹ báyìí?" },
     confirmButton: "Bẹ́ẹ̀ni, ṣẹ̀dá àkáǹtì Gigmark mi",
     voiceLocale: "yo-NG",
   },
@@ -174,7 +187,8 @@ const ACK_BY_LANG: Record<Lang, {
     location: (l) => `${l} — akwai aiki da yawa a wannan yankin.`,
     work: (w, e) => `Na ɗauka — ${w}${e > 0 ? ` da ƙarin ƙwarewa guda ${e}` : ""}.`,
     payout: (t) => `Madalla — ${t}.`,
-    summaryLabels: { intro: "Ga abin da na samu:", name: "Suna", phone: "Waya", location: "Wuri", work: "Aiki", goal: "Manufa", payout: "Biya", outro: "Shin za ka so in buɗe asusunka yanzu?" },
+    verification: (s) => s === "captured" ? "Na ajiye. Matakin KYC ɗinka zai tashi nan da nan idan muka tabbatar a NIMC/NIBSS." : "Babu damuwa — zamu sake tambayarka kafin samun bashi na farko.",
+    summaryLabels: { intro: "Ga abin da na samu:", name: "Suna", phone: "Waya", location: "Wuri", work: "Aiki", goal: "Manufa", payout: "Biya", verification: "Tabbaci", verificationPending: "Bai bayar ba tukuna", outro: "Shin za ka so in buɗe asusunka yanzu?" },
     confirmButton: "Eh, buɗe min asusun Gigmark",
     voiceLocale: "ha-NG",
   },
@@ -184,7 +198,8 @@ const ACK_BY_LANG: Record<Lang, {
     location: (l) => `${l} — ọrụ dị ọtụtụ na mpaghara ahụ.`,
     work: (w, e) => `Edebere m — ${w}${e > 0 ? ` na nkà mgbakwunye ${e}` : ""}.`,
     payout: (t) => `Ọ dị mma — ${t}.`,
-    summaryLabels: { intro: "Nke a bụ ihe m nwere:", name: "Aha", phone: "Ekwentị", location: "Ebe", work: "Ọrụ", goal: "Ebumnobi", payout: "Ụgwọ", outro: "Ị̀ kwere ka m mepee akaụntụ gị ugbu a?" },
+    verification: (s) => s === "captured" ? "Edebere m. Ọkwa KYC gị ga-arịgo ozugbo anyị gbasoro NIMC/NIBSS." : "Nsogbu adịghị — anyị ga-ajụ gị ọzọ tupu ngwaahịa mgbazinye ego mbụ.",
+    summaryLabels: { intro: "Nke a bụ ihe m nwere:", name: "Aha", phone: "Ekwentị", location: "Ebe", work: "Ọrụ", goal: "Ebumnobi", payout: "Ụgwọ", verification: "Nkwado njirimara", verificationPending: "A nyebeghị ya", outro: "Ị̀ kwere ka m mepee akaụntụ gị ugbu a?" },
     confirmButton: "Ee, mepee akaụntụ Gigmark m",
     voiceLocale: "ig-NG",
   },
@@ -197,6 +212,7 @@ const PLACEHOLDERS: Record<FlowStep, string> = {
   ask_work: "e.g. Tailoring and alterations",
   ask_goal: "e.g. Borrow for tools, save more, build credit...",
   ask_payout: "Bank transfer, wallet, or virtual account",
+  ask_verification: "11-digit NIN, 11-digit BVN, or 'skip'",
   review: "Type 'yes' to confirm, or what to edit.",
   creating: "",
   done: "",
@@ -209,6 +225,19 @@ function makeId() {
 function parsePhone(raw: string): string {
   const match = raw.match(/(\+?\d[\d\s()-]{7,}\d)/);
   return match ? match[1].replace(/[^\d+]/g, "") : "";
+}
+
+function parseVerification(raw: string): { kind: "NIN" | "BVN" | null; value: string; skipped: boolean } {
+  const text = raw.trim().toLowerCase();
+  if (!text || text === "skip" || text.includes("skip") || text.includes("later") || text.includes("not now")) {
+    return { kind: null, value: "", skipped: true };
+  }
+  const digits = raw.replace(/\D/g, "");
+  if (digits.length !== 11) {
+    return { kind: null, value: digits, skipped: false };
+  }
+  const kind: "NIN" | "BVN" = text.includes("bvn") ? "BVN" : "NIN";
+  return { kind, value: digits, skipped: false };
 }
 
 function parseLocation(raw: string): string {
@@ -282,6 +311,8 @@ function partnerMentionForGoal(goal: string): string | null {
   return "Got it. We'll surface the right financial path as your gig history grows.";
 }
 
+type VerificationCapture = { kind: "NIN" | "BVN" | null; value: string; skipped: boolean };
+
 export default function WorkerOnboard() {
   const router = useRouter();
   const [lang, setLang] = useState<Lang>("en");
@@ -289,6 +320,7 @@ export default function WorkerOnboard() {
   const ack = ACK_BY_LANG[lang];
   const [step, setStep] = useState<FlowStep>("ask_name");
   const [profile, setProfile] = useState<OnboardingProfile>({ ...defaultOnboardingProfile, language: "en" });
+  const [verification, setVerification] = useState<VerificationCapture>({ kind: null, value: "", skipped: false });
   const [messages, setMessages] = useState<Message[]>([
     { id: makeId(), role: "assistant", content: PROMPTS_BY_LANG.en.ask_name },
   ]);
@@ -309,7 +341,7 @@ export default function WorkerOnboard() {
   const offerCards = useMemo(() => deriveOnboardingOffers(profile), [profile]);
   const readiness = useMemo(() => deriveOnboardingReadiness(profile), [profile]);
   const signals = useMemo(() => deriveOnboardingSignals(profile), [profile]);
-  const progress = Math.round((STEP_PROGRESS[step] / 7) * 100);
+  const progress = Math.round((STEP_PROGRESS[step] / 8) * 100);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -328,16 +360,18 @@ export default function WorkerOnboard() {
 
   const handleLangChange = (next: Lang) => {
     if (next === lang) return;
-    setLang(next);
-    setProfile((prev) => ({ ...prev, language: next }));
-    if (step === "ask_name" && messages.length === 1) {
-      setMessages([{ id: makeId(), role: "assistant", content: PROMPTS_BY_LANG[next].ask_name }]);
-    } else {
-      setMessages((prev) => [
-        ...prev,
-        { id: makeId(), role: "assistant", content: PROMPTS_BY_LANG[next][step] || PROMPTS_BY_LANG[next].ask_name },
-      ]);
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
     }
+    setLang(next);
+    setProfile({ ...defaultOnboardingProfile, language: next, mode: profile.mode });
+    setVerification({ kind: null, value: "", skipped: false });
+    setStep("ask_name");
+    setInput("");
+    setError(null);
+    setMessages([
+      { id: makeId(), role: "assistant", content: PROMPTS_BY_LANG[next].ask_name },
+    ]);
   };
 
   const pushBot = (content: string) => {
@@ -405,12 +439,23 @@ export default function WorkerOnboard() {
     if (step === "ask_payout") {
       setProfile((prev) => ({ ...prev, payoutPreference: text }));
       setTimeout(() => pushBot(ack.payout(text)), 250);
+      setTimeout(() => advanceTo("ask_verification"), 900);
+      return;
+    }
+
+    if (step === "ask_verification") {
+      const parsed = parseVerification(text);
+      setVerification(parsed);
+      setTimeout(() => pushBot(ack.verification(parsed.kind ? "captured" : "skipped")), 250);
       setTimeout(() => {
         setStep("review");
         const l = ack.summaryLabels;
-        const summary = `${l.intro}\n· ${l.name}: ${profile.name}\n· ${l.phone}: ${profile.phone}\n· ${l.location}: ${profile.location}\n· ${l.work}: ${profile.workType}\n· ${l.goal}: ${profile.financialGoal}\n· ${l.payout}: ${text}\n\n${l.outro}`;
+        const verificationLine = parsed.kind
+          ? `${parsed.kind} •••• ${parsed.value.slice(-4)}`
+          : l.verificationPending;
+        const summary = `${l.intro}\n· ${l.name}: ${profile.name}\n· ${l.phone}: ${profile.phone}\n· ${l.location}: ${profile.location}\n· ${l.work}: ${profile.workType}\n· ${l.goal}: ${profile.financialGoal}\n· ${l.payout}: ${profile.payoutPreference}\n· ${l.verification}: ${verificationLine}\n\n${l.outro}`;
         pushBot(summary);
-      }, 1000);
+      }, 1100);
       return;
     }
 
@@ -454,6 +499,8 @@ export default function WorkerOnboard() {
           language: lang,
           bio: buildAutoBio(profile),
           skills: profile.skills,
+          verification_kind: verification.kind,
+          verification_last4: verification.value ? verification.value.slice(-4) : null,
         }),
       });
       const data = await response.json();
@@ -581,6 +628,19 @@ export default function WorkerOnboard() {
                 <p className="mt-4 text-sm leading-7 text-slate-600">
                   This account is yours, permanently. Every gig you finish pays out here.
                 </p>
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+                <span className="rounded-full bg-orange-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white">KYC tier</span>
+                {verification.kind ? (
+                  <span>
+                    <strong className="text-slate-950">Tier 2</strong> · {verification.kind} •••• {verification.value.slice(-4)} captured. Verification with NIMC/NIBSS runs asynchronously.
+                  </span>
+                ) : (
+                  <span>
+                    <strong className="text-slate-950">Tier 1</strong> · Phone-verified. NIN or BVN unlocks credit and savings products.
+                  </span>
+                )}
               </div>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">

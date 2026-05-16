@@ -34,10 +34,11 @@ Type / click in sequence (Zola acknowledges every answer — no waiting for AI c
 | 3 | Type `Lagos` → **Send** | *"Lagos — great, plenty of work in that area."* then asks for work |
 | 4 | Click the **Tailoring** chip | *"Noted — I've got tailoring."* then the **partner mention**: *"Quick heads-up — once you complete a few tailoring gigs on Gigmark, our GTBank partnership opens up an equipment-finance line for sewing machines and tools, up to ₦200,000. Worth knowing."* |
 | 5 | Click the **Borrow for tools** chip | The goal-mention: *"Noted. Borrowing-for-tools is one of the strongest paths on Gigmark — three verified gigs plus a clean rating opens an equipment finance application with GTBank."* |
-| 6 | Click the **Bank transfer** chip | *"Got it — Bank transfer."* then a clean summary of all six fields |
+| 6 | Click the **Bank transfer** chip | *"Got it — Bank transfer."* then asks for NIN or BVN |
+| 7 | Type a fake 11-digit number `12345678901` (or click **Skip for now**) | If you typed a number: *"Saved. Your KYC tier will step up automatically once we verify with NIMC/NIBSS."* If you skipped: *"No problem — we'll prompt again before the first lending product."* Then a clean summary of all seven fields |
 
 **Say (as the summary lands):**
-> "Notice what just happened — without a single form, Zola knows her name, phone, location, work, financial goal, and payout rail. And she's already been told exactly which financial product opens up after three verified gigs."
+> "Notice what just happened — without a single form, Zola knows her name, phone, location, work, financial goal, payout rail, and her KYC tier. She skipped NIN for now, which is fine — phone-verified is enough to start earning. We'll step her up before the first credit product."
 
 **Click the big green button: "Yes, create my Gigmark account."**
 

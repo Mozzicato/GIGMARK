@@ -14,7 +14,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { phone, name, role, location, language, bio, skills } = body;
+    const { phone, name, role, location, language, bio, skills, verification_kind, verification_last4 } = body;
 
     if (!phone || !name || !role) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -39,6 +39,8 @@ export async function POST(request: NextRequest) {
       skills: JSON.stringify(skills || []),
       wallet_balance: role === "employer" ? 250000 : 0,
       trust_score: 50,
+      verification_kind: verification_kind || null,
+      verification_last4: verification_last4 || null,
       created_at: now,
     });
 
