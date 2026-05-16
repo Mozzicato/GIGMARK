@@ -144,15 +144,15 @@ Emphasis (use a small honesty-tag, not a hero number): **Built end-to-end · Int
 
 **Slide 10 — The Team**
 
-Headline: A team that ships first, then talks to users.
+Headline: Four builders. One product. Shipped before pitched.
 Body:
-- **[Salaudeen Mubarak]** — [Engineering lead]. [One credibility line: e.g. "Built and shipped the full Gigmark stack — multilingual onboarding, Squad escrow, financial scoring — in [N] days."]
-- **[Team member 2 name]** — [role: Product / UX / Research]. [Credibility line: degree, internship, prior project, anything specific.]
-- **[Team member 3 name]** — [role: GTM / Operations]. [Credibility line.]
-- **Why us**: [One sentence of shared context — e.g. "Three UNILAG students who grew up watching family members do real work that the formal economy never recognised. We're building the thing that recognises them."]
-- **Advisors / mentors**: [If any. Leave this bullet out if none — empty advisor lists look weaker than no advisor line at all.]
+- **Salaudeen Mubarak** — Team lead, full-stack. Built the Squad escrow loop end-to-end, the multilingual onboarding flow across five languages (English, Pidgin, Yorùbá, Hausa, Igbo), and the live financial-readiness scoring engine.
+- **Ayinde Wisdom Elisha** — Frontend developer. [One specific contribution — e.g. "Shipped the worker profile, financial twin layout, and the gig-detail payment UI." Edit to match what's true.]
+- **Okoro Farid** — UI/UX designer. [One specific contribution — e.g. "Defined the orange-led visual language and the chat-led onboarding pattern that makes the product feel like a conversation, not a form." Edit to match what's true.]
+- **Aliyu Abdul-Muqodeem** — Frontend developer. [One specific contribution — e.g. "Shipped the employer dashboard, the post-gig flow, and the celebration view that closes the onboarding loop." Edit to match what's true.]
+- **Why us**: Four UNILAG students who grew up around informal work — the tailors, riders, and traders who keep the country running but stay invisible to formal credit. Gigmark is the system we wished existed for the people closest to us.
 
-Visual: three portrait cards side-by-side — name, role, one credibility line. Brand-consistent orange accents.
+Visual: a 2x2 grid of portrait cards — name, role, one credibility line each. Orange accents, consistent silhouettes if photos aren't available, equal card size.
 
 === PROMPT END ===
 
@@ -164,9 +164,7 @@ The prompt contains intentional placeholders so you don't ship anything you can'
 
 1. **Slide 2 (Target User)** — *"Research method (in progress)"*. If you've already had real conversations, change "in progress" to "completed with N workers". Otherwise leave it; "in progress" is honest.
 2. **Slide 9 (Research & Validation)** — replace `[N informal conversations]` with the real count. Zero is fine if zero; the structured-interview plan still validates the slide. If the number is zero, change the bullet to: *"User-side validation begins this week — structured interviews with 15 workers scheduled..."*
-3. **Slide 10 (The Team)** — every `[bracketed]` line. Names, roles, one credibility line each. The "Why us" line is the single most important sentence on the slide; spend two minutes on it.
-
-If you're solo, slide 10 becomes one full-bleed portrait + your name + one role + the "Why us" line as a sub-headline. Don't pad with fake co-founders.
+3. **Slide 10 (The Team)** — names and roles are filled in. Three of the four credibility lines have a starter sentence in brackets — replace each `[...]` with what's actually true for that person. Two minutes. The "Why us" line is written assuming you're all UNILAG students; if any of you are from elsewhere, edit it.
 
 ## How to use this
 
