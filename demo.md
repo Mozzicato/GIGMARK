@@ -131,6 +131,22 @@ Open any open gig from the dashboard.
 
 ---
 
+## Likely judge questions — short answers
+
+**Q: How do you know these workers are real? What about fraud?**
+A: Gigmark uses a **tiered verification model**. At signup we capture phone + behavioral signals (completed gigs, employer ratings, payment consistency, dispute rate). That's enough to build trust on the marketplace side. When a worker crosses into financial products — micro-credit, equipment finance, working capital — we step up to formal KYC: **NIN, BVN, and biometric match** through standard providers (Smile Identity, Dojah, Verified.ng). The trust score gates what they can access; the formal KYC gates whether a lender can disburse. We never need to over-collect KYC just to let someone earn from a gig.
+
+**Q: Why not require NIN/BVN at signup?**
+A: Two reasons. One, the informal-worker population is already friction-sensitive — every extra form is a drop-off. Two, NIN/BVN at signup proves identity but not *bankability*. The proof-of-work signal does both. So we let the worker earn first, and step up KYC at the moment it actually unlocks money.
+
+**Q: How does the worker onboard if they don't speak English?**
+A: The onboarding has a language toggle at the top — **English, Pidgin, Yorùbá, Hausa, Igbo**. The whole Zola conversation switches, including the summary card. The chip suggestions (Tailoring, Bank transfer, etc.) stay in English on purpose — they're the canonical category labels the marketplace runs on. Voice mode uses the matching speech locale where the browser supports it.
+
+**Q: What stops someone from creating fake gig history?**
+A: Gigs are funded by the **employer's wallet** before any worker sees them — escrow is locked at posting time. The worker can only earn proof-of-work if a real employer signs off and releases. So fake history requires fake employers willing to burn real wallet balance, which is self-defeating.
+
+---
+
 ## Sign-in cheat sheet
 
 | Tile | Role | When to use |

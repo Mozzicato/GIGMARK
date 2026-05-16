@@ -60,16 +60,134 @@ const QUICK_CHIPS: Partial<Record<FlowStep, string[]>> = {
   review: ["Yes, create my account", "Let me edit"],
 };
 
-const PROMPTS: Record<FlowStep, string> = {
-  ask_name: "Hi! I'm Zola, the Gigmark onboarding assistant. What should I call you?",
-  ask_phone: "Nice to meet you. What phone number should employers use to reach you?",
-  ask_location: "Got it. Where are you based? Just the city is fine.",
-  ask_work: "Lovely. What kind of work do you do most often?",
-  ask_goal: "Got it. What's the main thing you want Gigmark to help you with?",
-  ask_payout: "Almost done. How do you prefer to receive money after each gig?",
-  review: "Quick summary before I create your account...",
-  creating: "Creating your Gigmark account...",
-  done: "All done.",
+type Lang = "en" | "pidgin" | "yo" | "ha" | "ig";
+
+const LANGUAGES: { code: Lang; label: string; tag: string }[] = [
+  { code: "en", label: "English", tag: "EN" },
+  { code: "pidgin", label: "Pidgin", tag: "PCM" },
+  { code: "yo", label: "Yorùbá", tag: "YO" },
+  { code: "ha", label: "Hausa", tag: "HA" },
+  { code: "ig", label: "Igbo", tag: "IG" },
+];
+
+const PROMPTS_BY_LANG: Record<Lang, Record<FlowStep, string>> = {
+  en: {
+    ask_name: "Hi! I'm Zola, the Gigmark onboarding assistant. What should I call you?",
+    ask_phone: "Nice to meet you. What phone number should employers use to reach you?",
+    ask_location: "Got it. Where are you based? Just the city is fine.",
+    ask_work: "Lovely. What kind of work do you do most often?",
+    ask_goal: "Got it. What's the main thing you want Gigmark to help you with?",
+    ask_payout: "Almost done. How do you prefer to receive money after each gig?",
+    review: "Quick summary before I create your account...",
+    creating: "Creating your Gigmark account...",
+    done: "All done.",
+  },
+  pidgin: {
+    ask_name: "How far! I be Zola, di Gigmark onboarding assistant. Wetin I go call you?",
+    ask_phone: "Nice to meet you. Wetin be di phone number wey employers go use take reach you?",
+    ask_location: "Okay. Where you dey base? Just di city name go do.",
+    ask_work: "Cool. Wetin be di kind work wey you dey do pass?",
+    ask_goal: "Okay. Wetin you want make Gigmark help you with first?",
+    ask_payout: "We don almost finish. How you prefer make dem pay you after each gig?",
+    review: "Make I show you small summary before I open your account...",
+    creating: "I dey open your Gigmark account now...",
+    done: "We don finish.",
+  },
+  yo: {
+    ask_name: "Báwo! Èmi ni Zola, olùrànlọ́wọ́ Gigmark. Kí ni mo lè pè ọ́?",
+    ask_phone: "Inú mi dùn láti pàdé rẹ. Nọ́mbà fóònù wo ni àwọn ọlọ́wọ́ iṣẹ́ lè lò láti kàn ọ́?",
+    ask_location: "Ó dára. Ìlú wo ni o wà? Orúkọ ìlú ti tó.",
+    ask_work: "Òdára. Iru iṣẹ́ wo lo máa ń ṣe jùlọ?",
+    ask_goal: "Ó dára. Kí ni o fẹ́ kí Gigmark kọ́kọ́ ràn ọ́ lọ́wọ́?",
+    ask_payout: "Ó kù díẹ̀. Báwo lo ṣe fẹ́ gba owó lẹ́yìn iṣẹ́ kọ̀ọ̀kan?",
+    review: "Àkópọ̀ kéré kan kí n tó ṣẹ̀dá àkáǹtì rẹ...",
+    creating: "Mo ń ṣẹ̀dá àkáǹtì Gigmark rẹ báyìí...",
+    done: "Ó ti parí.",
+  },
+  ha: {
+    ask_name: "Sannu! Ni ne Zola, mai taimakon Gigmark. Mene ne sunanka?",
+    ask_phone: "Na ji daɗin haduwa da kai. Wace lambar waya ce ma'aikata za su iya tuntuɓarka?",
+    ask_location: "Madalla. A wace gari kake zama? Sunan birni kawai ya isa.",
+    ask_work: "Da kyau. Wace irin aiki kake yi sosai?",
+    ask_goal: "Madalla. Mene ne ka fi son Gigmark ya taimaka maka da shi tukuna?",
+    ask_payout: "Mun kusan gama. Yaya kake son a biya ka bayan kowane aiki?",
+    review: "Takaitaccen bayani kafin in buɗe maka asusu...",
+    creating: "Ina buɗe maka asusun Gigmark yanzu...",
+    done: "Mun gama.",
+  },
+  ig: {
+    ask_name: "Ndewo! Aha m bụ Zola, onye enyemaka Gigmark. Kedu ihe m ga-akpọ gị?",
+    ask_phone: "Obi dị m ụtọ ịhụ gị. Kedu nọmba ekwentị ndị ọrụ ga-eji kpọtụrụ gị?",
+    ask_location: "Ọ dị mma. Kedu obodo i bi? Naanị aha obodo ezuola.",
+    ask_work: "Ọmara. Kedụ ụdị ọrụ ị na-arụkarị?",
+    ask_goal: "Ọ dị mma. Gịnị ka ị chọrọ ka Gigmark buru ụzọ nyere gị aka na ya?",
+    ask_payout: "Anyị fọrọ nke nta ka anyị mechaa. Kedụ ka ị chọrọ ka a kwụọ gị ego mgbe ọrụ ọ bụla gasịrị?",
+    review: "Obere nchịkọta tupu m mepee akaụntụ gị...",
+    creating: "Ana m emepe akaụntụ Gigmark gị ugbu a...",
+    done: "Anyị emechaala.",
+  },
+};
+
+const ACK_BY_LANG: Record<Lang, {
+  name: (firstName: string) => string;
+  phone: (phone: string) => string;
+  location: (location: string) => string;
+  work: (workType: string, extra: number) => string;
+  payout: (text: string) => string;
+  summaryLabels: { intro: string; name: string; phone: string; location: string; work: string; goal: string; payout: string; outro: string };
+  confirmButton: string;
+  voiceLocale: string;
+}> = {
+  en: {
+    name: (n) => `Lovely to meet you, ${n}.`,
+    phone: (p) => `Saved — I'll use ${p} as your contact number.`,
+    location: (l) => `${l} — great, plenty of work in that area.`,
+    work: (w, e) => `Noted — I've got ${w}${e > 0 ? ` and ${e} related skill${e === 1 ? "" : "s"}` : ""}.`,
+    payout: (t) => `Got it — ${t}.`,
+    summaryLabels: { intro: "Here's what I have:", name: "Name", phone: "Phone", location: "Location", work: "Work", goal: "Goal", payout: "Payout", outro: "Ready for me to create your account?" },
+    confirmButton: "Yes, create my Gigmark account",
+    voiceLocale: "en-NG",
+  },
+  pidgin: {
+    name: (n) => `Sweet to meet you, ${n}.`,
+    phone: (p) => `I don save am — I go use ${p} reach you.`,
+    location: (l) => `${l} — plenty work dey for that area.`,
+    work: (w, e) => `Noted — I don get ${w}${e > 0 ? ` plus ${e} related skill${e === 1 ? "" : "s"}` : ""}.`,
+    payout: (t) => `Okay — ${t}.`,
+    summaryLabels: { intro: "Wetin I get be this:", name: "Name", phone: "Phone", location: "Location", work: "Work", goal: "Goal", payout: "Payout", outro: "You ready make I open your account?" },
+    confirmButton: "Yes, open my Gigmark account",
+    voiceLocale: "en-NG",
+  },
+  yo: {
+    name: (n) => `Inú mi dùn láti pàdé rẹ, ${n}.`,
+    phone: (p) => `Mo ti tọ́jú rẹ̀ — màá lo ${p} láti kàn ọ́.`,
+    location: (l) => `${l} — iṣẹ́ pọ̀ ní àgbègbè yẹn.`,
+    work: (w, e) => `Mo ti gbà — ${w}${e > 0 ? ` àti òye àfikún ${e}` : ""}.`,
+    payout: (t) => `Ó dára — ${t}.`,
+    summaryLabels: { intro: "Èyí ni mo ní:", name: "Orúkọ", phone: "Fóònù", location: "Ìlú", work: "Iṣẹ́", goal: "Èròngbà", payout: "Owó", outro: "Ṣé n lè ṣẹ̀dá àkáǹtì rẹ báyìí?" },
+    confirmButton: "Bẹ́ẹ̀ni, ṣẹ̀dá àkáǹtì Gigmark mi",
+    voiceLocale: "yo-NG",
+  },
+  ha: {
+    name: (n) => `Na ji daɗin haduwa da kai, ${n}.`,
+    phone: (p) => `Na ajiye — zan yi amfani da ${p} domin tuntuɓarka.`,
+    location: (l) => `${l} — akwai aiki da yawa a wannan yankin.`,
+    work: (w, e) => `Na ɗauka — ${w}${e > 0 ? ` da ƙarin ƙwarewa guda ${e}` : ""}.`,
+    payout: (t) => `Madalla — ${t}.`,
+    summaryLabels: { intro: "Ga abin da na samu:", name: "Suna", phone: "Waya", location: "Wuri", work: "Aiki", goal: "Manufa", payout: "Biya", outro: "Shin za ka so in buɗe asusunka yanzu?" },
+    confirmButton: "Eh, buɗe min asusun Gigmark",
+    voiceLocale: "ha-NG",
+  },
+  ig: {
+    name: (n) => `Obi dị m ụtọ izute gị, ${n}.`,
+    phone: (p) => `Echekwala m ya — m ga-eji ${p} kpọtụrụ gị.`,
+    location: (l) => `${l} — ọrụ dị ọtụtụ na mpaghara ahụ.`,
+    work: (w, e) => `Edebere m — ${w}${e > 0 ? ` na nkà mgbakwunye ${e}` : ""}.`,
+    payout: (t) => `Ọ dị mma — ${t}.`,
+    summaryLabels: { intro: "Nke a bụ ihe m nwere:", name: "Aha", phone: "Ekwentị", location: "Ebe", work: "Ọrụ", goal: "Ebumnobi", payout: "Ụgwọ", outro: "Ị̀ kwere ka m mepee akaụntụ gị ugbu a?" },
+    confirmButton: "Ee, mepee akaụntụ Gigmark m",
+    voiceLocale: "ig-NG",
+  },
 };
 
 const PLACEHOLDERS: Record<FlowStep, string> = {
@@ -166,10 +284,13 @@ function partnerMentionForGoal(goal: string): string | null {
 
 export default function WorkerOnboard() {
   const router = useRouter();
+  const [lang, setLang] = useState<Lang>("en");
+  const PROMPTS = PROMPTS_BY_LANG[lang];
+  const ack = ACK_BY_LANG[lang];
   const [step, setStep] = useState<FlowStep>("ask_name");
-  const [profile, setProfile] = useState<OnboardingProfile>({ ...defaultOnboardingProfile });
+  const [profile, setProfile] = useState<OnboardingProfile>({ ...defaultOnboardingProfile, language: "en" });
   const [messages, setMessages] = useState<Message[]>([
-    { id: makeId(), role: "assistant", content: PROMPTS.ask_name },
+    { id: makeId(), role: "assistant", content: PROMPTS_BY_LANG.en.ask_name },
   ]);
   const [input, setInput] = useState("");
   const [creating, setCreating] = useState(false);
@@ -200,10 +321,24 @@ export default function WorkerOnboard() {
     if (last.role !== "assistant") return;
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
     const utterance = new SpeechSynthesisUtterance(last.content);
-    utterance.lang = "en-NG";
+    utterance.lang = ack.voiceLocale;
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
-  }, [messages, voiceMode]);
+  }, [messages, voiceMode, ack.voiceLocale]);
+
+  const handleLangChange = (next: Lang) => {
+    if (next === lang) return;
+    setLang(next);
+    setProfile((prev) => ({ ...prev, language: next }));
+    if (step === "ask_name" && messages.length === 1) {
+      setMessages([{ id: makeId(), role: "assistant", content: PROMPTS_BY_LANG[next].ask_name }]);
+    } else {
+      setMessages((prev) => [
+        ...prev,
+        { id: makeId(), role: "assistant", content: PROMPTS_BY_LANG[next][step] || PROMPTS_BY_LANG[next].ask_name },
+      ]);
+    }
+  };
 
   const pushBot = (content: string) => {
     setMessages((prev) => [...prev, { id: makeId(), role: "assistant", content }]);
@@ -228,7 +363,7 @@ export default function WorkerOnboard() {
       const name = text.replace(/[,.!?]/g, " ").trim();
       setProfile((prev) => ({ ...prev, name }));
       const firstName = name.split(" ")[0] || name;
-      setTimeout(() => pushBot(`Lovely to meet you, ${firstName}.`), 250);
+      setTimeout(() => pushBot(ack.name(firstName)), 250);
       setTimeout(() => advanceTo("ask_phone"), 800);
       return;
     }
@@ -236,7 +371,7 @@ export default function WorkerOnboard() {
     if (step === "ask_phone") {
       const phone = parsePhone(text) || text;
       setProfile((prev) => ({ ...prev, phone }));
-      setTimeout(() => pushBot(`Saved — I'll use ${phone} as your contact number.`), 250);
+      setTimeout(() => pushBot(ack.phone(phone)), 250);
       setTimeout(() => advanceTo("ask_location"), 900);
       return;
     }
@@ -244,7 +379,7 @@ export default function WorkerOnboard() {
     if (step === "ask_location") {
       const location = parseLocation(text);
       setProfile((prev) => ({ ...prev, location }));
-      setTimeout(() => pushBot(`${location} — great, plenty of work in that area.`), 250);
+      setTimeout(() => pushBot(ack.location(location)), 250);
       setTimeout(() => advanceTo("ask_work"), 900);
       return;
     }
@@ -252,10 +387,7 @@ export default function WorkerOnboard() {
     if (step === "ask_work") {
       const { workType, skills } = parseWork(text);
       setProfile((prev) => ({ ...prev, workType, skills }));
-      setTimeout(
-        () => pushBot(`Noted — I've got ${workType}${skills.length > 1 ? ` and ${skills.length - 1} related skill${skills.length - 1 === 1 ? "" : "s"}` : ""}.`),
-        250
-      );
+      setTimeout(() => pushBot(ack.work(workType, skills.length - 1)), 250);
       const mention = partnerMentionForWork(workType);
       if (mention) setTimeout(() => pushBot(mention), 1100);
       setTimeout(() => advanceTo("ask_goal"), mention ? 2200 : 900);
@@ -272,10 +404,11 @@ export default function WorkerOnboard() {
 
     if (step === "ask_payout") {
       setProfile((prev) => ({ ...prev, payoutPreference: text }));
-      setTimeout(() => pushBot(`Got it — ${text}.`), 250);
+      setTimeout(() => pushBot(ack.payout(text)), 250);
       setTimeout(() => {
         setStep("review");
-        const summary = `Here's what I have:\n· Name: ${profile.name}\n· Phone: ${profile.phone}\n· Location: ${profile.location}\n· Work: ${profile.workType}\n· Goal: ${profile.financialGoal}\n· Payout: ${text}\n\nReady for me to create your account?`;
+        const l = ack.summaryLabels;
+        const summary = `${l.intro}\n· ${l.name}: ${profile.name}\n· ${l.phone}: ${profile.phone}\n· ${l.location}: ${profile.location}\n· ${l.work}: ${profile.workType}\n· ${l.goal}: ${profile.financialGoal}\n· ${l.payout}: ${text}\n\n${l.outro}`;
         pushBot(summary);
       }, 1000);
       return;
@@ -318,7 +451,7 @@ export default function WorkerOnboard() {
           name: profile.name,
           role: "worker",
           location: profile.location || null,
-          language: profile.language || "en",
+          language: lang,
           bio: buildAutoBio(profile),
           skills: profile.skills,
         }),
@@ -403,6 +536,26 @@ export default function WorkerOnboard() {
                 }`}
               >
                 {mode === "text" ? "Text first" : "Voice first"}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="section-shell flex flex-wrap items-center gap-2 pb-4">
+          <span className="text-xs uppercase tracking-[0.28em] text-slate-500">Language</span>
+          <div className="flex flex-wrap gap-2">
+            {LANGUAGES.map((option) => (
+              <button
+                key={option.code}
+                type="button"
+                onClick={() => handleLangChange(option.code)}
+                className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
+                  lang === option.code
+                    ? "border-orange-300 bg-orange-500 text-white shadow-[0_8px_20px_rgba(249,115,22,0.22)]"
+                    : "border-slate-200 bg-white text-slate-600 hover:border-orange-200 hover:text-slate-950"
+                }`}
+              >
+                <span className="mr-1.5 inline-block rounded-sm bg-black/10 px-1 py-0.5 text-[10px] tracking-wider">{option.tag}</span>
+                {option.label}
               </button>
             ))}
           </div>
@@ -592,7 +745,7 @@ export default function WorkerOnboard() {
                     disabled={creating || !profile.name || !profile.phone}
                     className="btn-primary mt-3 w-full bg-emerald-600 px-6 py-3 hover:bg-emerald-700"
                   >
-                    {creating ? "Creating account..." : "Yes, create my Gigmark account"}
+                    {creating ? "Creating account..." : ack.confirmButton}
                   </button>
                 )}
 
