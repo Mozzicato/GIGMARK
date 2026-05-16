@@ -1,0 +1,19 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "regions": ["fra1"],
+  "functions": {
+    "src/app/api/payment/webhook/route.ts": {
+      "maxDuration": 30
+    },
+    "src/app/api/onboarding/chat/route.ts": {
+      "maxDuration": 30
+    },
+    "src/app/api/payment/initiate/route.ts": {
+      "maxDuration": 30
+    },
+    "src/app/api/payment/virtual-account/route.ts": {
+      "maxDuration": 30
+    }
+  }
+}

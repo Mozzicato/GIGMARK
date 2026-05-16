@@ -147,16 +147,39 @@ src/
 
 ## Build & Deploy
 
+### Local
+
 ```bash
 # Build for production
 npm run build
 
 # Start production server
 npm start
-
-# Run tests (if needed)
-npm run test
 ```
+
+### Deploy to Vercel
+
+This repo is configured to deploy to Vercel as-is. One-time setup:
+
+1. **Import the repo** on [vercel.com/new](https://vercel.com/new) — pick `Mozzicato/GIGMARK`. Framework auto-detects as Next.js.
+2. **Environment variables** — add these in the Vercel project settings *before* the first deploy:
+   - `SQUAD_SANDBOX_KEY` — your Squad sandbox secret key (required for payments)
+   - `APP_URL` — your Vercel URL once known, e.g. `https://gigmark-mozzicato.vercel.app` (used for the payment callback)
+   - `GROQ_API_KEY` *(optional)* — enables the LLM onboarding path; without it, the deterministic parser handles everything
+3. **Deploy.** First build takes ~2 minutes.
+4. **Update Squad webhook URL** in your Squad sandbox dashboard to `https://YOUR-VERCEL-URL/api/payment/webhook` so settlements reconcile against the live deployment.
+
+### How the database works on Vercel
+
+The project uses a JSON-backed in-memory store. On serverless:
+
+- The seed (`data/gigmark.json`) is **bundled into the build** — every cold start boots with the demo data: 5 workers, 2 employers, Bella's wallet at ₦180k.
+- Writes (onboarding, escrow locks, releases) stay **in memory only**. They survive across requests on the same warm instance but reset on cold start.
+- This is intentional for a demo deploy — judges always see clean state on first hit. For production, swap `src/lib/db.ts` for Vercel KV, Postgres, or any persistent store; the `db` API stays the same.
+
+### Region
+
+`vercel.json` pins functions to `fra1` (Frankfurt) — closest standard Vercel region to Nigeria. Change to your nearest region if you prefer.
 
 ---
 

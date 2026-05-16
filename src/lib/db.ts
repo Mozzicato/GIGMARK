@@ -1,37 +1,43 @@
 import path from "node:path";
 import fs from "node:fs";
+// Bundled seed — Webpack/Turbopack inlines this into the serverless bundle so
+// it works on Vercel where the project's `data/` folder isn't readable at
+// runtime. Local dev still prefers the on-disk copy so edits survive restarts.
+import seedData from "../../data/gigmark.json";
 
+const isReadOnlyFs = !!process.env.VERCEL;
 const dataDir = path.join(process.cwd(), "data");
-if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-
 const dbPath = path.join(dataDir, "gigmark.json");
 
-// In-memory data store
+// In-memory data store — initialised from the bundled seed, optionally
+// hydrated from disk on local dev, never written to disk on serverless.
 let data: {
   users: any[];
   gigs: any[];
   proof_of_work: any[];
   transactions: any[];
-} = {
-  users: [],
-  gigs: [],
-  proof_of_work: [],
-  transactions: [],
-};
+} = structuredClone(seedData) as any;
 
 function loadDb() {
-  if (fs.existsSync(dbPath)) {
-    try {
+  if (isReadOnlyFs) return;
+  try {
+    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+    if (fs.existsSync(dbPath)) {
       const content = fs.readFileSync(dbPath, "utf-8");
       data = JSON.parse(content);
-    } catch (e) {
-      console.error("Failed to load database", e);
     }
+  } catch (e) {
+    console.error("Failed to load database from disk; using bundled seed", e);
   }
 }
 
 function saveDb() {
-  fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
+  if (isReadOnlyFs) return;
+  try {
+    fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
+  } catch (e) {
+    console.error("Failed to save database", e);
+  }
 }
 
 loadDb();
