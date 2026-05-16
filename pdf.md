@@ -36,17 +36,20 @@ It is not a gig marketplace. It is the **trust and financial-identity layer** th
 
 ### Squad API integration
 
-Squad is the financial rail. Gigmark is the trust layer on top.
+Squad is the financial rail. Gigmark is the trust layer on top. We use **two different Squad virtual-account types** because permanent identity and one-off escrow funding are two different jobs:
 
-| Squad endpoint | What it powers |
+- **Customer VA (permanent)** — every worker and employer gets one lifetime account number. Never expires, accepts any amount. This is Amara's bankable identity — the number she gives to clients, the number she keeps for years.
+- **Dynamic VA (per-gig)** — when an employer funds a specific gig, we mint a one-shot account that only accepts the exact escrow amount and expires in 15 minutes. Clean reconciliation against `transaction_ref`. Wrong amounts are refused at the rail, not after.
+
+| Squad endpoint | Purpose in Gigmark |
 |---|---|
-| Hosted checkout | Card-funded escrow top-up |
-| Dynamic Virtual Accounts | Permanent GTBank accounts for every user |
-| Transaction verification | Post-checkout confirmation |
-| Webhook (HMAC-SHA512) | Signed settlement reconciliation |
-| Sandbox simulator | End-to-end demo without real funds |
+| Hosted checkout | Card-funded employer wallet top-up |
+| Customer Virtual Account | Permanent per-user account number for payouts + ad-hoc top-ups |
+| Dynamic Virtual Account | Per-gig escrow funding — exact amount, 15-min expiry, tied to one `transaction_ref` |
+| Transaction verification | Post-checkout confirmation against reference |
+| Webhook (HMAC-SHA512) | Signed settlement reconciliation, no reliance on browser redirects |
 
-**5 distinct endpoints, 1 unified payment loop.** Without Squad, escrow does not exist on this product.
+**5 endpoints, two-account strategy, one unified payment loop.** Without Squad, escrow does not exist on this product.
 
 </td>
 <td width="50%" valign="top">

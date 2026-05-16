@@ -67,13 +67,16 @@ Visual: three-step horizontal flow — Work → Identity → Financial Access �
 
 **Slide 5 — Squad API Integration**
 
-Headline: Squad is the money rail. Gigmark is the trust layer on top.
+Headline: Two virtual-account types. Two different jobs. Both wired.
 Body:
-- **Hosted checkout** — employers fund escrow via card with one click.
-- **Dynamic Virtual Accounts** — every employer and every worker gets a permanent GTBank-issued account number. Money in becomes wallet balance. Wallet balance becomes locked escrow on gig posting.
-- **Transaction verification + webhook (HMAC-SHA512)** — every settlement is signed and reconciled against local escrow state. No reliance on browser redirects.
+- **Why two?** Permanent identity and one-off escrow funding are different products. We use Squad's **Customer VA** for the first and Squad's **Dynamic VA** for the second.
+- **Customer Virtual Account (permanent)** — every worker and employer gets one lifetime account number. Never expires, accepts any amount. This is Amara's bankable identity, the number she gives to clients for years.
+- **Dynamic Virtual Account (per-gig)** — when an employer funds a specific gig, Squad mints a one-shot account that only accepts the exact escrow amount and auto-expires in 15 minutes. Clean reconciliation against a single `transaction_ref`; wrong amounts are refused at the rail.
+- **Hosted checkout** for card top-ups, **transaction verification** for redirect confirmation, **HMAC-SHA512 webhook** for signed settlement so we never trust a browser callback alone.
 
-Emphasis: **5 Squad endpoints, 1 unified payment rail**
+Visual: a split panel — left side a "Customer VA" card with a never-expires badge, right side a "Dynamic VA" card with a countdown timer and "exact ₦25,000" lock.
+
+Emphasis: **5 Squad endpoints · 2 VA strategies · 1 escrow loop**
 
 ---
 

@@ -146,6 +146,12 @@ A: The onboarding has a language toggle at the top — **English, Pidgin, Yorùb
 **Q: What stops someone from creating fake gig history?**
 A: Gigs are funded by the **employer's wallet** before any worker sees them — escrow is locked at posting time. The worker can only earn proof-of-work if a real employer signs off and releases. So fake history requires fake employers willing to burn real wallet balance, which is self-defeating.
 
+**Q: Why use Squad's Dynamic Virtual Accounts if you're showing a "permanent" account on the worker profile?**
+A: Because they're two different Squad products doing two different jobs.
+- The **per-user permanent account** ("9257836913 · GTBank") on Amara's profile uses Squad's **Customer Virtual Account** — never expires, accepts any amount, lasts the lifetime of her Gigmark identity.
+- The **per-gig escrow funding** flow (Bella funding ₦25,000 for "Stitch 10 staff aprons") uses Squad's **Dynamic Virtual Account** — one-shot, exact-amount, 15-minute expiry. That's exactly what DVAs are designed for: a single transaction with one expected sum, tied to one `transaction_ref`, with anything else refused at the rail.
+- Using a permanent account for one-off escrow would leak amounts and complicate reconciliation. Using a DVA for a lifetime identity would force re-onboarding every 15 minutes. So we use both.
+
 ---
 
 ## Sign-in cheat sheet
