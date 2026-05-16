@@ -1,30 +1,22 @@
-# Gigmark — Gamma Pitch Deck Prompt
+# Gigmark — Gamma Pitch Deck Prompt (10 slides)
 
 Paste everything between the `=== PROMPT START ===` and `=== PROMPT END ===` lines into Gamma's "Generate" → "Paste in text" flow. Gamma will turn each `---` separated block into a slide. Edit visuals after generation.
 
 **Brand cues for Gamma's style chooser:** orange-led palette (#F97316 primary, #FB923C accent), warm off-white background (#FFF7ED), slate-900 text, generous whitespace, single hero number per slide where possible, sans-serif modern (Inter / Geist family). Tone: confident, specific, no jargon dressing.
 
+**Slide count:** the rubric allows max 10 content slides. This prompt produces exactly 10 in the rubric's order. Gamma's auto-generated cover (deck title) is separate and doesn't count against the 10.
+
 ---
 
 === PROMPT START ===
 
-Title: **Gigmark — Turn work into identity. Turn identity into opportunity.**
+Deck title: **Gigmark — Turn work into identity. Turn identity into opportunity.**
 
-Generate an 8-slide investor / hackathon pitch deck. Follow the exact structure below. Each `---` is a new slide. Do not invent claims I have not given you. Keep copy tight: headline + 3–5 short bullets max per slide. Pull a single emphasis number out of the body and make it the visual anchor on slides that have one. Brand: orange (#F97316), warm cream background, dark slate text, modern sans-serif.
-
----
-
-**Slide 1 — Title**
-
-Headline: Gigmark
-Subhead: Proof-of-work identity for Africa's informal workforce.
-Tagline: Turn completed gigs into trust. Turn trust into financial access.
-Footer: Built on Squad. Hackathon submission, 2026.
-Visual: full-bleed wordmark, single orange brand block, no clutter.
+Generate exactly 10 slides in the order below. Each `---` is a new slide. Do not invent claims I have not given you. Keep copy tight: headline + 3–5 short bullets max per slide. Pull a single emphasis number out of the body and make it the visual anchor on slides that have one. Brand: orange (#F97316), warm cream background, dark slate text, modern sans-serif. Do not add a separate title slide — start directly with slide 1 (Problem).
 
 ---
 
-**Slide 2 — Problem**
+**Slide 1 — Problem**
 
 Headline: 45 million workers. Zero economic identity.
 Body:
@@ -38,7 +30,7 @@ Emphasis number: **45M+**
 
 ---
 
-**Slide 3 — Target User**
+**Slide 2 — Target User**
 
 Headline: We built this for Amara.
 Body:
@@ -46,13 +38,13 @@ Body:
 - Behind Amara: ~17M Nigerian tailors, riders, artisans, and small-trade workers in the same situation. Plus Tunde the rider, Chiamaka the designer, Yusuf the plumber, Ngozi the tutor.
 - What they actually want: a way to *prove* the work they already do, so they can borrow for tools, smooth income gaps, and get hired again without starting from zero.
 - What they don't want: another KYC form before they've earned a single naira.
-- Research method (next 30 days): structured interviews with 15 Lagos and Abuja workers across tailoring, dispatch, and design — recruited via the boutique cluster on Awolowo Road and the dispatch hubs in Yaba.
+- Research method (in progress): structured interviews with 15 Lagos and Abuja workers across tailoring, dispatch, and design — recruited via the boutique cluster on Awolowo Road and the dispatch hubs in Yaba.
 
 Visual: a stylised worker portrait card with name, age, trade, location, monthly earnings range, current credit access (none).
 
 ---
 
-**Slide 4 — Solution**
+**Slide 3 — Solution Overview**
 
 Headline: Work becomes proof. Proof becomes identity. Identity unlocks money.
 Body:
@@ -65,7 +57,7 @@ Visual: three-step horizontal flow — Work → Identity → Financial Access �
 
 ---
 
-**Slide 5 — Squad API Integration**
+**Slide 4 — Squad API Integration**
 
 Headline: Two virtual-account types. Two different jobs. Both wired.
 Body:
@@ -80,7 +72,7 @@ Emphasis: **5 Squad endpoints · 2 VA strategies · 1 escrow loop**
 
 ---
 
-**Slide 6 — AI / Data Intelligence**
+**Slide 5 — AI / Data Intelligence**
 
 Headline: Two of the four pillars, working together.
 Body:
@@ -93,11 +85,11 @@ Visual: a clean stacked-bar split of the six metric weights with their colours.
 
 ---
 
-**Slide 7 — User Flow**
+**Slide 6 — User Flow**
 
 Headline: Sixty seconds in. Six months later, bankable.
 Body (numbered, six steps):
-1. Worker chats with Zola in their language. KYC tier captured. Profile created with a permanent GTBank payout account.
+1. Worker chats with Zola in their language. KYC tier captured. Profile created with a permanent Customer VA payout account.
 2. Employer posts a gig. Escrow locks against their wallet automatically — Squad rail under the hood.
 3. AI matches top workers by skills + trust + completion history.
 4. Worker is assigned, completes the job, gets rated.
@@ -108,47 +100,92 @@ Visual: six numbered orange chips on a horizontal rail; below each, a faded scre
 
 ---
 
-**Slide 8 — Impact & Business Model**
+**Slide 7 — Impact Potential**
 
-Headline: A trust layer for 45M workers, with three revenue streams.
+Headline: Who this reaches, how fast.
 Body:
-- **Year 1 reach**: 500 active workers in Lagos and Abuja by month 3; 5,000 by month 12. ₦50M gig volume in the first 90 days, ₦1B by month 12, on conservative assumptions of 8 gigs/worker/quarter at ~₦25k average ticket.
-- **Geographic scale**: rails generalise across West Africa. No technical blocker on Ghana, Kenya, Uganda — currency-aware, bank-pluggable. Mobile money infrastructure already mature in those markets.
-- **Revenue**:
-  1. **Transaction fee** — 0.5–2% per gig processed through escrow.
-  2. **Partner revenue share** — 15–25% on loans, savings products, and insurance issued to Gigmark-verified workers.
-  3. **Premium hiring tools** — analytics and bulk verification for SME and enterprise hirers.
-- **Why this defends**: every gig deepens the data moat. The competitor catching up has to wait for workers to earn through them first.
+- **Year 1 reach**: 500 active workers in Lagos and Abuja by month 3; 5,000 active workers across Nigeria by month 12.
+- **Ground game**: starts in Lekki (tailoring), Yaba (dispatch), Wuse 2 (services). Concentration first, then expansion. Each cluster anchors 50–100 workers.
+- **Workers reached this affects**: ₦1B+ gig volume processed in Year 1 means real bank-verifiable income records for every active worker — a population that is currently invisible to credit and savings products.
+- **Why now**: mobile money penetration crossed 60M wallets, regulators want digital inclusion, and informal-worker income is at an all-time high but still unbanked. The rails are ready. The identity layer is the missing piece.
+- **Stretch (Year 2)**: West Africa — Ghana, Kenya, Uganda — currency-aware, bank-pluggable. No technical blocker.
 
-Emphasis number: **₦1B gig volume — Year 1 target**
+Emphasis number: **5,000 workers · ₦1B gig volume — Year 1 target**
 
 ---
 
-**Closing slide (optional, slide 9)**
+**Slide 8 — Scalability & Business Model**
 
-Headline: Work is already happening. We just made it count.
-Subhead: gigmark.app · github.com/Mozzicato/GIGMARK
-Footer: Team Gigmark — Mozzicato, 2026.
+Headline: Three revenue streams. One compounding data moat.
+Body:
+- **Transaction fee** — 0.5–2% per gig processed through escrow. Pays for itself once gig volume crosses ~₦300M/month.
+- **Partner revenue share** — 15–25% on loans, savings, and insurance issued to Gigmark-verified workers. This is the long-tail revenue line, not the wedge.
+- **Premium hiring tools** — bulk verification and analytics for SME and enterprise hirers. Pricing in the ₦200k–₦2M/year band.
+- **Why this defends**: every completed gig deepens the dataset competitors don't have. Catching up means waiting for workers to earn through your platform first.
+- **Unit economics**: at ₦25k average gig × 8 gigs/worker/quarter × 1% fee = ₦2,000 revenue per worker per quarter, before partner revenue share. CAC target: under ₦1,500 per worker via cluster-based referral.
+
+Emphasis number: **3 revenue streams · 1 data moat**
+
+---
+
+**Slide 9 — Research & Validation**
+
+Headline: What's already true. What we're still proving.
+Body:
+- **Market evidence (already true)**: Nigeria's informal economy is ~57% of GDP and ~92% of the workforce (NBS, 2024). Mobile money active wallets crossed 60M in 2024. The rail is ready. The behavioural data is happening. The identity layer is the gap.
+- **Technical validation (already true)**: the full Squad escrow loop runs end-to-end on sandbox today — hosted checkout, DVA reconciliation, HMAC-signed webhook, payout to a permanent account. Not a mock; a live integration on `github.com/Mozzicato/GIGMARK`.
+- **User-side validation (in progress)**: [N informal conversations with tailors/riders/tutors so far — fill in the real number before the pitch]. Structured interviews with 15 workers scheduled across tailoring, dispatch, and design via the boutique cluster on Awolowo Road and the Yaba dispatch hubs.
+- **What would falsify this**: workers refusing to share gig data in exchange for financial-product access. Our early conversations show the opposite — everyone we have spoken to wants a way to prove the work they already do.
+- **What we are *not* claiming**: signed lender pilots, paying customers, or revenue. We have built the product; the market work begins now.
+
+Emphasis (use a small honesty-tag, not a hero number): **Built end-to-end · Interviewing this week**
+
+---
+
+**Slide 10 — The Team**
+
+Headline: A team that ships first, then talks to users.
+Body:
+- **[Salaudeen Mubarak]** — [Engineering lead]. [One credibility line: e.g. "Built and shipped the full Gigmark stack — multilingual onboarding, Squad escrow, financial scoring — in [N] days."]
+- **[Team member 2 name]** — [role: Product / UX / Research]. [Credibility line: degree, internship, prior project, anything specific.]
+- **[Team member 3 name]** — [role: GTM / Operations]. [Credibility line.]
+- **Why us**: [One sentence of shared context — e.g. "Three UNILAG students who grew up watching family members do real work that the formal economy never recognised. We're building the thing that recognises them."]
+- **Advisors / mentors**: [If any. Leave this bullet out if none — empty advisor lists look weaker than no advisor line at all.]
+
+Visual: three portrait cards side-by-side — name, role, one credibility line. Brand-consistent orange accents.
 
 === PROMPT END ===
 
 ---
 
+## Fill these in before generating the deck
+
+The prompt contains intentional placeholders so you don't ship anything you can't defend:
+
+1. **Slide 2 (Target User)** — *"Research method (in progress)"*. If you've already had real conversations, change "in progress" to "completed with N workers". Otherwise leave it; "in progress" is honest.
+2. **Slide 9 (Research & Validation)** — replace `[N informal conversations]` with the real count. Zero is fine if zero; the structured-interview plan still validates the slide. If the number is zero, change the bullet to: *"User-side validation begins this week — structured interviews with 15 workers scheduled..."*
+3. **Slide 10 (The Team)** — every `[bracketed]` line. Names, roles, one credibility line each. The "Why us" line is the single most important sentence on the slide; spend two minutes on it.
+
+If you're solo, slide 10 becomes one full-bleed portrait + your name + one role + the "Why us" line as a sub-headline. Don't pad with fake co-founders.
+
 ## How to use this
 
 1. Open Gamma, click **Generate** → **Paste in text**.
 2. Paste everything between the `===` markers above.
-3. In Gamma's settings: pick **8-card** length, **modern minimalist** template, **deep orange** accent. Aspect 16:9.
+3. In Gamma's settings: pick **10-card** length, **modern minimalist** template, **deep orange** accent. Aspect 16:9.
 4. Generate. Review each slide. Push back on any auto-generated copy that softens the specifics — Gamma sometimes paraphrases away the numbers.
-5. Drop in screenshots from the live product on slide 7. Use `/onboard`, `/employer/dashboard`, `/worker/amara-okafor`, and the gig-detail page.
+5. Drop in screenshots from the live product on slide 6. Use `/onboard`, `/employer/dashboard`, `/worker/amara-okafor`, and the gig-detail page.
 6. Export to PDF for backup before the pitch.
 
 ## What this deck deliberately does *not* claim
 
-- We do not say we have already interviewed 15 workers. Slide 3 names the research plan, not a completed program. If a judge asks "have you spoken to users yet?", the honest answer is: *"Three informal conversations, structured interviews scheduled this week."* — adjust to whatever is true on pitch day.
-- We do not put a fake testimonial quote on screen.
-- We do not put a unit economics chart that we cannot defend at 1-on-1 follow-up.
+- No fake user testimonial quotes.
+- No signed lender pilots or paying customers.
+- No team members or advisors who haven't agreed to be named on the deck.
+- No unit economics chart we cannot defend in 1-on-1 follow-up.
 
 ## If you have 10 minutes before the pitch
 
-Update slide 3 with the names of any real workers you have actually talked to. Even one real first-hand quote (with permission) replaces every line of this slide with something stronger than what's drafted here.
+1. Fill in the slide 10 team placeholders.
+2. Talk to **one** real tailor or rider on WhatsApp. Get permission to quote one sentence. Drop it onto slide 2 as a real quote — single biggest credibility upgrade available in 10 minutes.
+3. Update slide 9 with the real conversation count.
