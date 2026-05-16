@@ -150,7 +150,7 @@ Body:
 - **Ayinde Wisdom Elisha** — Frontend developer. [One specific contribution — e.g. "Shipped the worker profile, financial twin layout, and the gig-detail payment UI." Edit to match what's true.]
 - **Okoro Farid** — UI/UX designer. [One specific contribution — e.g. "Defined the orange-led visual language and the chat-led onboarding pattern that makes the product feel like a conversation, not a form." Edit to match what's true.]
 - **Aliyu Abdul-Muqodeem** — Frontend developer. [One specific contribution — e.g. "Shipped the employer dashboard, the post-gig flow, and the celebration view that closes the onboarding loop." Edit to match what's true.]
-- **Why us**: Four UNILAG students who grew up around informal work — the tailors, riders, and traders who keep the country running but stay invisible to formal credit. Gigmark is the system we wished existed for the people closest to us.
+- **Why us**: Four UNILAG students. The informal economy isn't a market we studied — it's the neighbourhood we live in. Gigmark is the receipt that work was always supposed to print.
 
 Visual: a 2x2 grid of portrait cards — name, role, one credibility line each. Orange accents, consistent silhouettes if photos aren't available, equal card size.
 
